@@ -4,10 +4,10 @@ from src.models import User, Channel, Claim
 from src.serializer import create_user, create_channel, create_claim
 
   
-def try_to_claim(username, channel_id):
-  user = User.query.filter_by(username=username).first()
+def try_to_claim(user_name, channel_id):
+  user = User.query.filter_by(user_name=user_name).first()
   if user is None:
-    user = create_user(username)
+    user = create_user(user_name)
   channel = Channel.query.filter_by(channel_id=channel_id).first()
   if channel is None:
     channel = create_channel(channel_id)
@@ -65,9 +65,9 @@ def _compute_the_winner(claims):
   for user, score in high_score.items():
     if score > highest_score:
       highest_score = score
-      best_users = [User.query.get(user).username]
+      best_users = [User.query.get(user).user_name]
     elif score == highest_score:
-      best_users.append(User.query.get(user).username)
+      best_users.append(User.query.get(user).user_name)
 
   result = _get_game_status(highest_score, best_users)
   return result

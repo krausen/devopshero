@@ -2,8 +2,8 @@ from src import db
 from src.models import User, Channel, Claim
 
 
-def create_user(username):
-  user = User(username=username)
+def create_user(user_name):
+  user = User(user_name=user_name)
   db.session.add(user)
   db.session.commit()
   return user

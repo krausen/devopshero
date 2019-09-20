@@ -9,7 +9,7 @@ def test_user_serializer(mock_db, mock_user):
   test_user = mock.Mock()
   mock_user.return_value = test_user
   
-  result = create_user('mock_username')
+  result = create_user('mock_user_name')
 
   assert mock_db.add.called_once()
   assert mock_db.commit.called_once()

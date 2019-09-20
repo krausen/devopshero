@@ -8,10 +8,10 @@ def mock_query_user(user_id):
   mock_user = mock.Mock()
   if user_id is 1:
     mock_user.id = 1
-    mock_user.username = 'a'
+    mock_user.user_name = 'a'
   elif user_id is 2:
     mock_user.id = 2
-    mock_user.username = 'b'
+    mock_user.user_name = 'b'
   return mock_user
 
 @mock.patch('src.game.User')

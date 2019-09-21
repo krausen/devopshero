@@ -16,7 +16,7 @@ class Channel(db.Model):
     claims = db.relationship('Claim', backref='channel', lazy=True)
 
     def __repr__(self):
-        return '<Channel {}>'.format(self.name)
+        return '<Channel {}>'.format(self.channel_id)
 
 
 class Claim(db.Model):
@@ -26,4 +26,4 @@ class Claim(db.Model):
     channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'), nullable=False)
 
     def __repr__(self):
-        return '<Claim {}>'.format(self.time)
+        return '<Claim {} by {}>'.format(self.time, self.user_id)

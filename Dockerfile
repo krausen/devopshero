@@ -1,6 +1,7 @@
 FROM python:3.7
 COPY . /app
 WORKDIR /app
+ENV LOGLEVEL DEBUG
 ENV FLASK_ENV production
 ENV FLASK_APP devopshero.py
 RUN pip install -r requirements.txt

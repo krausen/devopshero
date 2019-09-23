@@ -1,27 +1,42 @@
+import flask
+import logging
+import os
+import sys
+
 from src import app
-from flask import request
+from src import game
 
-from src.game import try_to_start_game, try_to_stop_game, try_to_claim, try_to_get_high_score
+LOGGER = logging.getLogger(__name__)
+sh = logging.StreamHandler(stream=sys.stdout)
+LOGGER.setLevel(os.environ.get("LOGLEVEL", "INFO"))
+LOGGER.addHandler(sh)
 
+@app.route('/', methods=['POST'])
+def index():
+  return main(flask.request)
 
-@app.route('/start', methods=['POST'])
-def start():
-  result = try_to_start_game(request.form['channel_id'])
-  return result
-
-
-@app.route('/stop', methods=['POST'])
-def stop():
-  result = try_to_stop_game(request.form['channel_id'])
-  return result
-
-
-@app.route('/claim', methods=['POST'])
-def claim():
-  try_to_claim(request.form['user_name'], request.form['channel_id'])
-  return ''
-
-@app.route('/high_score', methods=['POST'])
-def high_score():
-  result = try_to_get_high_score(request.form['channel_id'])
-  return result
+def main(request):
+  method = request.form['text']
+  if method == 'start':
+    LOGGER.debug('START REQUEST: \n%s', str(request.form))
+    response = game.try_to_start_game(request.form['channel_id'])
+    LOGGER.debug('START RESPONSE: \n%s', str(response))
+    return response
+  elif method == 'stop':
+    LOGGER.debug('STOP REQUEST: \n%s', str(request.form))
+    response = game.try_to_stop_game(request.form['channel_id'])
+    LOGGER.debug('STOP RESPONSE: \n%s', str(response))
+    return response
+  elif method == 'claim':
+    LOGGER.debug('CLAIM REQUEST: \n%s', str(request.form))
+    response = game.try_to_claim(request.form['user_name'], request.form['channel_id'])
+    LOGGER.debug('CLAIM RESPONSE: \n%s', str(response))
+    return response
+  elif method == 'high_score':
+    LOGGER.debug('HIGH_SCORE REQUEST: \n%s', str(request.form))
+    response = game.try_to_get_high_score(request.form['channel_id'])
+    LOGGER.debug('HIGH_SCORE RESPONSE: \n%s', str(response))
+    return response
+  else:
+    LOGGER.warning('Invalid method: %s', str(request.form))
+    return 'You tried to use an invalid method {0}'.format(method)

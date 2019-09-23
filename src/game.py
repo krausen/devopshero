@@ -20,6 +20,7 @@ def try_to_claim(user_name, channel_id):
     channel = create_channel(channel_id)
   create_claim(datetime.datetime.now(), user.id, channel.id)
   db.session.commit()
+  return "Successful claim"
 
 
 def try_to_start_game(channel_id):
@@ -30,7 +31,7 @@ def try_to_start_game(channel_id):
     return _start_game(channel)
   except Exception as e:
     LOGGER.error(str(e))
-    return ''
+    return 'ERROR'
 
 
 def try_to_stop_game(channel_id):
@@ -40,7 +41,7 @@ def try_to_stop_game(channel_id):
     return _stop_game(channel)
   except Exception as e:
     LOGGER.error(str(e))
-    return ''
+    return 'ERROR'
 
 def try_to_get_high_score(channel_id):
   channel = Channel.query.filter_by(channel_id=channel_id).first()
@@ -49,7 +50,7 @@ def try_to_get_high_score(channel_id):
     return _get_high_score(channel)
   except Exception as e:
     LOGGER.error(str(e))
-    return ''
+    return 'ERROR'
 
 
 def _start_game(channel):

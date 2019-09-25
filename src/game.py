@@ -28,7 +28,9 @@ def try_to_start_game(channel_id):
     channel = Channel.query.filter_by(channel_id=channel_id).first()
     if channel is None:
         channel = create_channel(channel_id)
+        LOGGER.info('Channel created: %s', channel)
     try:
+        LOGGER.info('Starting game in %s', channel)
         return _start_game(channel)
     except Exception as e:
         LOGGER.error(str(e))
@@ -56,10 +58,13 @@ def try_to_get_high_score(channel_id):
 
 
 def _start_game(channel):
-    if not channel.start is None:
+    if channel.start:
+        LOGGER.warning('Game has already started in %s', channel)
         raise Exception('Game has already started')
-    channel.start = datetime.datetime.now()
+    now = datetime.datetime.now().isoformat()
+    channel.start = now
     db.session.commit()
+    LOGGER.info('Game started at %s', now)
     return "Game has started"
 
 

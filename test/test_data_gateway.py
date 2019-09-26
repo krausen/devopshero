@@ -1,11 +1,11 @@
 from datetime import datetime
 from unittest import mock
-from src.serializer import create_user, create_channel, create_claim
+from src.data_gateway import create_user, create_channel, create_claim
 
 
-@mock.patch('src.serializer.User')
-@mock.patch('src.serializer.db')
-def test_user_serializer(mock_db, mock_user):
+@mock.patch('src.data_gateway.User')
+@mock.patch('src.data_gateway.db')
+def test_create_user(mock_db, mock_user):
   test_user = mock.Mock()
   mock_user.return_value = test_user
   
@@ -15,9 +15,9 @@ def test_user_serializer(mock_db, mock_user):
   assert mock_db.commit.called_once()
   assert result == test_user
 
-@mock.patch('src.serializer.Channel')
-@mock.patch('src.serializer.db')
-def test_channel_serializer(mock_db, mock_channel):
+@mock.patch('src.data_gateway.Channel')
+@mock.patch('src.data_gateway.db')
+def test_create_channel(mock_db, mock_channel):
   test_channel = mock.Mock()
   mock_channel.return_value = test_channel
   
@@ -27,9 +27,9 @@ def test_channel_serializer(mock_db, mock_channel):
   assert mock_db.commit.called_once()
   assert result == test_channel
 
-@mock.patch('src.serializer.Claim')
-@mock.patch('src.serializer.db')
-def test_claim_serializer(mock_db, mock_claim):
+@mock.patch('src.data_gateway.Claim')
+@mock.patch('src.data_gateway.db')
+def test_create_claim(mock_db, mock_claim):
   test_claim = mock.Mock()
   mock_claim.return_value = test_claim
 

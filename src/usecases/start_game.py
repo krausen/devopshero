@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 import sys
-from src.data_gateway import create_channel, channel_exist, game_is_running, start_game
+from src.repositories.data_gateway import create_channel, channel_exist, game_is_running, start_game
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)
@@ -27,6 +27,6 @@ def _start_game(channel_id):
         LOGGER.warning('Game has already started in %s', channel_id)
         raise Exception('Game has already started')
     now = datetime.datetime.now().isoformat()
-    start_game(channel_id, now)
+    channel = start_game(channel_id, now)
     LOGGER.info('Game started in %s at %s', channel_id, now)
-    return "Game has started"
+    return channel

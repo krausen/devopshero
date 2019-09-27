@@ -1,5 +1,6 @@
 import unittest.mock as mock
 
+from src.entities.user import User
 from src.routes import main
 
 
@@ -23,14 +24,18 @@ def test_start(try_to_start_game):
     try_to_start_game.assert_called_once_with('mock_channel_id')
 
 
+@mock.patch('src.routes._get_winner')
+@mock.patch('src.routes.try_to_get_high_score')
 @mock.patch('src.routes.try_to_stop_game')
-def test_stop(try_to_stop_game):
+def test_stop(try_to_stop_game, mock_try_to_get_high_score, mock_get_winner):
     mock_request = mock.Mock()
     mock_request.form = {'text': 'stop', 'channel_id': 'mock_channel_id'}
+    mock_try_to_get_high_score.return_value = {'user_a': 3, 'user_b': 1}
+    mock_get_winner.return_value = [User('user_a')], 3
 
-    main(mock_request)
+    response = main(mock_request)
 
-    try_to_stop_game.assert_called_once_with('mock_channel_id')
+    assert response == 'The winner with 3 points is user_a'
 
 
 @mock.patch('src.routes.try_to_claim')
@@ -51,8 +56,8 @@ def test_claim(try_to_claim):
 @mock.patch('src.routes.try_to_stop_game')
 @mock.patch('src.routes.try_to_claim')
 @mock.patch('src.routes.try_to_get_high_score')
-def test_claim(try_to_start_game, try_to_stop_game, try_to_claim,
-               try_to_get_high_score):
+def test_invalid_method(try_to_start_game, try_to_stop_game, try_to_claim,
+                        try_to_get_high_score):
     mock_request = mock.Mock()
     mock_request.form = {
         'text': 'mock_invalid_method',

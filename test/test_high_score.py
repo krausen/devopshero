@@ -1,0 +1,70 @@
+from unittest import mock, TestCase
+
+from src.entities.user import User
+from src.usecases.high_score import _get_winner, _sort_high_score, try_to_get_high_score
+
+
+@mock.patch('src.usecases.high_score.get_channel')
+@mock.patch('src.usecases.high_score.get_user')
+@mock.patch('src.usecases.high_score.get_claims_after')
+@mock.patch('src.usecases.high_score.channel_exist')
+def test_try_to_get_high_score(mock_channel_exist, mock_get_claims_after,
+                               mock_get_user, _):
+    claim_1 = mock.Mock()
+    claim_2 = mock.Mock()
+    claim_3 = mock.Mock()
+    user_a = User(user_name='user_a')
+    user_b = User(user_name='user_b')
+    mock_get_claims_after.return_value = [claim_1, claim_2, claim_3]
+    mock_get_user.side_effect = [user_a, user_a, user_b]
+    mock_channel_exist.return_value = True
+
+    high_score = try_to_get_high_score('mock_channel_id')
+
+    assert high_score == {'user_a': 2, 'user_b': 1}
+
+
+def test_sort_high_score():
+    high_score = {'user_a': 3, 'user_b': 4}
+
+    sorted_high_score = _sort_high_score(high_score)
+
+    assert high_score == {'user_b': 4, 'user_a': 3}
+
+
+@mock.patch('src.usecases.high_score.get_user')
+def test_get_winner(mock_get_user):
+    user_a = User('user_a')
+    user_b = User('user_b')
+    mock_get_user.side_effect = [user_a, user_b]
+    high_score = {'user_a': 4, 'user_b': 3}
+
+    winner, score = _get_winner(high_score)
+
+    assert winner == [user_a]
+    assert score == 4
+
+
+@mock.patch('src.usecases.high_score.get_user')
+def test_get_winner_draw(mock_get_user):
+    user_a = User('user_a')
+    user_b = User('user_b')
+    mock_get_user.side_effect = [user_a, user_b]
+    high_score = {'user_a': 4, 'user_b': 4}
+
+    winners, score = _get_winner(high_score)
+
+    assert user_a in winners
+    assert user_b in winners
+    assert len(winners) == 2
+    assert score == 4
+
+
+@mock.patch('src.usecases.high_score.get_user')
+def test_get_winner_no_winner(_):
+    high_score = {}
+
+    winners, score = _get_winner(high_score)
+
+    assert score == 0
+    assert winners == []

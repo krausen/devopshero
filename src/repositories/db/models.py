@@ -1,7 +1,7 @@
-from src import db
+from src.repositories.db import db
 
 
-class User(db.Model):
+class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(64), index=True)
     claims = db.relationship('Claim', backref='user', lazy=True)
@@ -10,7 +10,7 @@ class User(db.Model):
         return '<User {}>'.format(self.user_name)
 
 
-class Channel(db.Model):
+class ChannelModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     channel_id = db.Column(db.String(8), index=True)
     start = db.Column(db.DateTime, index=True, nullable=True)
@@ -20,7 +20,7 @@ class Channel(db.Model):
         return '<Channel {}>'.format(self.channel_id)
 
 
-class Claim(db.Model):
+class ClaimModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

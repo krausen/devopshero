@@ -2,33 +2,12 @@ import datetime
 import logging
 import os
 import sys
-from src.data_gateway import create_user, create_channel, create_claim, channel_exist, game_is_running, start_game, get_user, get_channel, user_exist
+from src.data_gateway import channel_exist, game_is_running, get_user, get_channel, get_claims_after
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)
 LOGGER.setLevel(os.environ.get("LOGLEVEL", "INFO"))
 LOGGER.addHandler(sh)
-
-
-def try_to_claim(user_name, channel_id):
-    if not user_exist(user_name):
-        user = create_user(user_name)
-    if not channel_exist(channel_id):
-        create_channel(channel_id)
-    create_claim(datetime.datetime.now(), user.id, channel.id)
-    return "Successful claim"
-
-
-def try_to_start_game(channel_id):
-    if not channel_exist(channel_id):
-        create_channel(channel_id)
-        LOGGER.info('Channel created with id: %s', channel_id)
-    try:
-        LOGGER.info('Starting game in %s', channel_id)
-        return _start_game(channel_id)
-    except Exception as e:
-        LOGGER.error(str(e))
-        return 'ERROR'
 
 
 def try_to_stop_game(channel_id):
@@ -47,16 +26,6 @@ def try_to_get_high_score(channel_id):
     except Exception as e:
         LOGGER.error(str(e))
         return 'ERROR'
-
-
-def _start_game(channel_id):
-    if game_is_running(channel_id):
-        LOGGER.warning('Game has already started in %s', channel_id)
-        raise Exception('Game has already started')
-    now = datetime.datetime.now().isoformat()
-    start_game(channel_id, now)
-    LOGGER.info('Game started in %s at %s', channel_id, now)
-    return "Game has started"
 
 
 def _stop_game(channel_id):

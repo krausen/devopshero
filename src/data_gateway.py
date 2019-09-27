@@ -23,26 +23,6 @@ def create_claim(time, user_id, channel_id):
     return claim
 
 
-def start_game(channel_id, time):
-    user = get_channel(channel_id)
-    channel.start = time
-    db.session.commit()
-
-
-def channel_exist(channel_id):
-    channel = Channel.query.filter_by(channel_id=channel_id).first()
-    return channel != None
-
-
-def user_exist(user_name):
-    user = User.query.filter_by(user_name=user_name).first()
-    return user != None
-
-
-def game_is_running(channel_id):
-    return channel.start != None
-
-
 def get_user(user_name):
     return User.query.filter_by(user_name=user_name).first()
 
@@ -54,3 +34,24 @@ def get_channel(channel_id):
 def get_claims_after(channel_id, time):
     return Claim.query.filter(Claim.channel_id == channel_id).filter(
         Claim.time >= time).all()
+
+
+def start_game(channel_id, time):
+    user = get_channel(channel_id)
+    channel.start = time
+    db.session.commit()
+
+
+def channel_exist(channel_id):
+    channel = get_channel(channel_id)
+    return channel != None
+
+
+def user_exist(user_name):
+    user = get_user(user_name)
+    return user != None
+
+
+def game_is_running(channel_id):
+    channel = get_channel(channel_id)
+    return channel.start != None

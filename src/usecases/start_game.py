@@ -11,15 +11,13 @@ LOGGER.addHandler(sh)
 
 
 def try_to_start_game(channel_id):
+    channel = None
     if not channel_exist(channel_id):
         create_channel(channel_id)
         LOGGER.info('Channel created with id: %s', channel_id)
-    try:
-        LOGGER.info('Starting game in %s', channel_id)
-        return _start_game(channel_id)
-    except Exception as e:
-        LOGGER.error(str(e))
-        return 'ERROR'
+    LOGGER.info('Starting game in %s', channel_id)
+    channel = _start_game(channel_id)
+    return channel
 
 
 def _start_game(channel_id):

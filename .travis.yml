@@ -3,7 +3,7 @@ language: python
 install:
   - pip install -r requirements.txt
 script:
-  - pytest --cov=src --cov-config=.coveragerc --cov-report=html --color=yes
+  - pytest --cov=src --cov-config=.coveragerc
   - yapf --style google -r --diff src/
 after_success:
   coveralls

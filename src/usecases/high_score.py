@@ -13,11 +13,7 @@ LOGGER.addHandler(sh)
 
 def try_to_get_high_score(channel_id):
     LOGGER.info('Try to stop game in channel: %s', channel_id)
-    try:
-        return _get_high_score(channel_id)
-    except Exception as e:
-        LOGGER.error(str(e))
-        return 'ERROR'
+    return _get_high_score(channel_id)
 
 
 def _get_high_score(channel_id):

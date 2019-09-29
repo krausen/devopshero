@@ -24,6 +24,21 @@ def test_try_to_get_high_score(mock_channel_exist, mock_get_claims_after,
     assert high_score == {'user_a': 2, 'user_b': 1}
 
 
+@mock.patch('src.usecases.high_score.get_channel')
+@mock.patch('src.usecases.high_score.get_user')
+@mock.patch('src.usecases.high_score.get_claims_after')
+@mock.patch('src.usecases.high_score.channel_exist')
+def test_try_to_get_high_score_no_channel_exist(mock_channel_exist,
+                                                mock_get_claims_after,
+                                                mock_get_user, _):
+    mock_channel_exist.return_value = False
+
+    try:
+        try_to_get_high_score('mock_channel_id')
+    except Exception as e:
+        assert str(e) == 'No such channel exist'
+
+
 def test_sort_high_score():
     high_score = {'user_a': 3, 'user_b': 4}
 

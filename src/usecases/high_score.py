@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 
-from src.repositories.data_gateway import get_user, get_channel, get_claims_after, channel_exist
+from src.adapters.data_gateway import get_user, get_channel, get_claims_after, channel_exist
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)

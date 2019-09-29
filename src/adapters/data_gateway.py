@@ -1,5 +1,5 @@
-from src.repositories.db import db
-from src.repositories.db.models import UserModel, ChannelModel, ClaimModel
+from src.adapters.db import db
+from src.adapters.db.models import UserModel, ChannelModel, ClaimModel
 from src.entities.user import User
 from src.entities.channel import Channel
 from src.entities.claim import Claim

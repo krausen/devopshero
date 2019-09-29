@@ -1,4 +1,4 @@
-from src.repositories.db import db
+from src.adapters.db import db
 
 
 class UserModel(db.Model):

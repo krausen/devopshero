@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 import sys
-from src.repositories.data_gateway import create_user, create_channel, create_claim, channel_exist, user_exist
+from src.adapters.data_gateway import create_user, create_channel, create_claim, channel_exist, user_exist
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)

@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 import sys
-from src.repositories.data_gateway import create_channel, channel_exist, game_is_running, start_game
+from src.adapters.data_gateway import create_channel, channel_exist, game_is_running, start_game
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)

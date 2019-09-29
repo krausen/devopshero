@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from src.repositories.data_gateway import channel_exist, game_is_running, stop_game
+from src.adapters.data_gateway import channel_exist, game_is_running, stop_game
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)

@@ -15,15 +15,10 @@ def try_to_start_game(channel_id):
     if not channel_exist(channel_id):
         create_channel(channel_id)
         LOGGER.info('Channel created with id: %s', channel_id)
-    LOGGER.info('Starting game in %s', channel_id)
-    channel = _start_game(channel_id)
-    return channel
-
-
-def _start_game(channel_id):
     if game_is_running(channel_id):
         LOGGER.warning('Game has already started in %s', channel_id)
         raise Exception('Game has already started')
+    LOGGER.info('Starting game in %s', channel_id)
     now = datetime.datetime.now().isoformat()
     channel = start_game(channel_id, now)
     LOGGER.info('Game started in %s at %s', channel_id, now)

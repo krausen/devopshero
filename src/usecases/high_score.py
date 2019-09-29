@@ -13,10 +13,6 @@ LOGGER.addHandler(sh)
 
 def try_to_get_high_score(channel_id):
     LOGGER.info('Try to stop game in channel: %s', channel_id)
-    return _get_high_score(channel_id)
-
-
-def _get_high_score(channel_id):
     if not channel_exist(channel_id):
         raise Exception('No such channel exist')
     claims = get_claims_after(channel_id, get_channel(channel_id).start)

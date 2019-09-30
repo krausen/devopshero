@@ -1,9 +1,12 @@
 language: python
 
 install:
-  - pip install -r requirements.txt
+  - pip install pipenv
+  - export PIPENV_IGNORE_VIRTUALENVS=1
+  - export PIPENV_VENV_IN_PROJECT=1
+  - pipenv sync --dev
 script:
-  - pytest --cov=src --cov-config=.coveragerc
-  - yapf --style google -r --diff src/
+  - pipenv run pytest --cov=src --cov-config=.coveragerc
+  - pipenv run yapf --style google -r --diff src/
 after_success:
-  coveralls
+  pipenv run coveralls

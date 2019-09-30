@@ -10,10 +10,10 @@ LOGGER.addHandler(sh)
 
 
 def try_to_stop_game(channel_id):
-    LOGGER.info('Try to stop game in channel: %s', channel_id)
+    LOGGER.info("Try to stop game in channel: %s", channel_id)
     if not channel_exist(channel_id):
-        raise Exception('No such channel')
+        raise Exception("No such channel")
     elif not game_is_running(channel_id):
-        raise Exception('No game started in channel')
+        raise Exception("No game started in channel")
     channel = stop_game(channel_id)
     return channel

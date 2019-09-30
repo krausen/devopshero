@@ -1,5 +1,4 @@
-class Claim():
-
+class Claim:
     def __init__(self, time, user, channel):
         self.time = time
         self.user = user

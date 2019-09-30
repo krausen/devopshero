@@ -17,9 +17,11 @@ def get_channel(channel_id):
 
 def get_claims_after(channel_id, time):
     channel_model = ChannelModel.query.filter_by(channel_id=channel_id).first()
-    claim_models = ClaimModel.query.filter(
-        ClaimModel.channel_id == channel_model.id).filter(
-            ClaimModel.time >= time).all()
+    claim_models = (
+        ClaimModel.query.filter(ClaimModel.channel_id == channel_model.id)
+        .filter(ClaimModel.time >= time)
+        .all()
+    )
 
     claims = []
     for claim in claim_models:
@@ -47,9 +49,7 @@ def create_channel(channel_id):
 def create_claim(time, user_name, channel_id):
     user_model = UserModel.query.filter_by(user_name=user_name).first()
     channel_model = ChannelModel.query.filter_by(channel_id=channel_id).first()
-    claim_model = ClaimModel(time=time,
-                             user_id=user.id,
-                             channel_id=channel_model.id)
+    claim_model = ClaimModel(time=time, user_id=user.id, channel_id=channel_model.id)
     db.session.add(claim_model)
     db.session.commit()
     user = User(user_name)

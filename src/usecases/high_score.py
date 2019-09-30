@@ -3,7 +3,12 @@ import logging
 import os
 import sys
 
-from src.adapters.data_gateway import get_user, get_channel, get_claims_after, channel_exist
+from src.adapters.data_gateway import (
+    get_user,
+    get_channel,
+    get_claims_after,
+    channel_exist,
+)
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)
@@ -12,11 +17,11 @@ LOGGER.addHandler(sh)
 
 
 def try_to_get_high_score(channel_id):
-    LOGGER.info('Try to stop game in channel: %s', channel_id)
+    LOGGER.info("Try to stop game in channel: %s", channel_id)
     if not channel_exist(channel_id):
-        raise Exception('No such channel exist')
+        raise Exception("No such channel exist")
     claims = get_claims_after(channel_id, get_channel(channel_id).start)
-    LOGGER.debug('Compute high_score from claims:\n%s', claims)
+    LOGGER.debug("Compute high_score from claims:\n%s", claims)
     high_score = {}
     for claim in claims:
         user_name = get_user(claim.user.user_name).user_name
@@ -26,14 +31,14 @@ def try_to_get_high_score(channel_id):
             high_score[user_name] = 1
     high_score = _sort_high_score(high_score)
 
-    LOGGER.debug('Computed high_score: \n %s', high_score)
+    LOGGER.debug("Computed high_score: \n %s", high_score)
     return high_score
 
 
 def _sort_high_score(high_score):
-    winner_to_loser = sorted(high_score.keys(),
-                             key=lambda user: high_score[user],
-                             reverse=True)
+    winner_to_loser = sorted(
+        high_score.keys(), key=lambda user: high_score[user], reverse=True
+    )
     sorted_high_score = {}
     for user in winner_to_loser:
         sorted_high_score[user] = high_score[user]

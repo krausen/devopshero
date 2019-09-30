@@ -7,6 +7,6 @@ install:
   - pipenv sync --dev
 script:
   - pipenv run pytest --cov=src --cov-config=.coveragerc
-  - pipenv run yapf --style google -r --diff src/
+  - pipenv run black --check ./
 after_success:
   pipenv run coveralls

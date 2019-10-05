@@ -2,4 +2,6 @@
 branch = True
 
 [report]
-omit = src/adapters/*
+omit = 
+    src/hero/adapters/*
+    src/app.py

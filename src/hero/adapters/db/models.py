@@ -1,7 +1,10 @@
-from src.adapters.db import db
+from flask_sqlalchemy import SQLAlchemy
+from hero.adapters.web.flask_app import app
+
+db = SQLAlchemy(app)
 
 
-class UserModel(db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(64), index=True)
     claims = db.relationship("Claim", backref="user", lazy=True)
@@ -10,7 +13,7 @@ class UserModel(db.Model):
         return "<User {}>".format(self.user_name)
 
 
-class ChannelModel(db.Model):
+class Channel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     channel_id = db.Column(db.String(8), index=True)
     start = db.Column(db.DateTime, index=True, nullable=True)
@@ -20,7 +23,7 @@ class ChannelModel(db.Model):
         return "<Channel {}>".format(self.channel_id)
 
 
-class ClaimModel(db.Model):
+class Claim(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

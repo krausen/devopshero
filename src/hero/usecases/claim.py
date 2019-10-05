@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 import sys
-from src.adapters.data_gateway import (
+from hero.adapters.data_gateway import (
     create_user,
     create_channel,
     create_claim,

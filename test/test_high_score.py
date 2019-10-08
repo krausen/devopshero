@@ -76,7 +76,7 @@ def test_get_winner(mock_get_user):
     user_a = User("user_a")
     user_b = User("user_b")
     mock_get_user.side_effect = [user_a, user_b]
-    high_score = {"user_a": 4, "user_b": 3}
+    high_score = {user_a: 4, user_b: 3}
 
     winner, score = _get_winner(high_score)
 
@@ -89,7 +89,7 @@ def test_get_winner_draw(mock_get_user):
     user_a = User("user_a")
     user_b = User("user_b")
     mock_get_user.side_effect = [user_a, user_b]
-    high_score = {"user_a": 4, "user_b": 4}
+    high_score = {user_a: 4, user_b: 4}
 
     winners, score = _get_winner(high_score)
 

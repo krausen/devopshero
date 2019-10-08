@@ -51,10 +51,10 @@ def _get_winner(high_score):
     highest_score = 0
     best_users = []
 
-    for user_name, score in high_score.items():
+    for user, score in high_score.items():
         if score > highest_score:
             highest_score = score
-            best_users = [get_user(user_name)]
+            best_users = [user]
         elif score == highest_score:
-            best_users.append(get_user(user_name))
+            best_users.append(user)
     return best_users, highest_score

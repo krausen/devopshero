@@ -103,5 +103,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#Desktop Services Store
-.DS_Store
+# Desktop Services Store
+*.DS_Store
+
+# Ignore db files
+*.db
+
+# Ignore migrations folder
+
+Migrations

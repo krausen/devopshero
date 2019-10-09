@@ -15,6 +15,4 @@ def verify_request(version_number, headers, request_body):
         + hmac.new(slack_signing_secret, bytes(message, "utf8"), "sha256").hexdigest()
     )
 
-    print(hashed_message)
-
     return hashed_message == headers["X-Slack-Signature"]

@@ -30,6 +30,8 @@ def claim():
 
 
 def main(request):
+    LOGGER.debug(request.data)
+    LOGGER.debug(request.headers)
     if not verify_request("v0", request.headers, request.data):
         abort(403)
 

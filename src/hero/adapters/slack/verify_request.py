@@ -3,7 +3,10 @@ import hashlib
 import os
 
 
-def verify_request(version_number, headers, request_body):
+def verify_request(version_number, headers, request_form):
+
+    request_body = "&".join(["{}={}".format(k, v) for k, v in request_form.items()])
+
     message = "{0}:{1}:{2}".format(
         version_number, headers["X-Slack-Request-Timestamp"], request_body
     )

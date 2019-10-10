@@ -1,21 +1,30 @@
 import hmac
 import hashlib
 import os
+import logging
+import os
+import sys
+
+LOGGER = logging.getLogger(__name__)
+sh = logging.StreamHandler(stream=sys.stdout)
+LOGGER.setLevel(os.environ.get("LOGLEVEL", "INFO"))
+LOGGER.addHandler(sh)
 
 
-def verify_request(version_number, headers, request_form):
+def verify_request(request):
+    time_stamp = request.headers["X-Slack-Request-Timestamp"].encode("utf8")
+    slack_signing_secret = os.environ["SLACK_SIGNING_SECRET"].encode("utf8")
 
-    request_body = "&".join(["{}={}".format(k, v) for k, v in request_form.items()])
+    
+    message = "v0:".encode("utf8") + time_stamp + ":".encode("utf8") + request.data
 
-    message = "{0}:{1}:{2}".format(
-        version_number, headers["X-Slack-Request-Timestamp"], request_body
-    )
-    slack_signing_secret = bytes(os.environ["SLACK_SIGNING_SECRET"], "utf8")
-
+    LOGGER.debug(message)
+    LOGGER.debug(time_stamp)
     hashed_message = (
-        version_number
-        + "="
-        + hmac.new(slack_signing_secret, bytes(message, "utf8"), "sha256").hexdigest()
+        "v0="
+        + hmac.new(slack_signing_secret, message, "sha256").hexdigest()
     )
 
-    return hashed_message == headers["X-Slack-Signature"]
+    LOGGER.debug(hashed_message)
+
+    return hmac.compare_digest(hashed_message, request.headers["X-Slack-Signature"])

@@ -30,18 +30,23 @@ def claim():
 
 
 def main(request):
-    if not verify_request("v0", request.headers, request.form):
-        abort(403)
+    try:
+        request.data = request.get_data()
+        if not verify_request(request):
+            abort(403)
 
-    from hero.core import start, stop, claim, high_score
+        from hero.core import start, stop, claim, high_score
 
-    method = request.form["text"]
-    if method == "start":
-        return start(request.form)
-    elif method == "stop":
-        return stop(request.form)
-    elif method == "high_score":
-        return high_score(request.form)
-    else:
-        LOGGER.warning("Invalid method: %s", str(request))
-        return "You tried to use an invalid method {0}".format(method)
+        method = request.form["text"]
+        if method == "start":
+            return start(request.form)
+        elif method == "stop":
+            return stop(request.form)
+        elif method == "high_score":
+            return high_score(request.form)
+        else:
+            LOGGER.warning("Invalid method: %s", str(request))
+            return "You tried to use an invalid method {0}".format(method)
+    except Exception as e:
+        LOGGER.debug(str(e))
+        raise e

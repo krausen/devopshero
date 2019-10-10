@@ -15,16 +15,16 @@ def verify_request(request):
     time_stamp = request.headers["X-Slack-Request-Timestamp"].encode("utf8")
     slack_signing_secret = os.environ["SLACK_SIGNING_SECRET"].encode("utf8")
 
-    
-    message = "v0:".encode("utf8") + time_stamp + ":".encode("utf8") + request.data
+    message = b"v0:%b:%b" % (time_stamp, request.data)
 
-    LOGGER.debug(message)
-    LOGGER.debug(time_stamp)
     hashed_message = (
-        "v0="
-        + hmac.new(slack_signing_secret, message, "sha256").hexdigest()
+        "v0=" + hmac.new(slack_signing_secret, message, hashlib.sha256).hexdigest()
     )
 
-    LOGGER.debug(hashed_message)
-
-    return hmac.compare_digest(hashed_message, request.headers["X-Slack-Signature"])
+    LOGGER.debug(message)
+    if hmac.compare_digest(hashed_message, request.headers["X-Slack-Signature"]):
+        LOGGER.info("Request verified: \n%s \n%s", request.headers, request.data)
+        return True
+    else:
+        LOGGER.warning("Unauthorized request: \n%s \n%s", request.headers, request.data)
+        return False

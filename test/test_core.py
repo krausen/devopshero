@@ -52,7 +52,7 @@ def test_present_winner_no_winner():
     best_user = []
     highest_score = 0
 
-    response = present_winner(best_user, highest_score, None)
+    response = present_winner({})
 
     assert response == "No one won :("
 
@@ -64,7 +64,7 @@ def test_present_winner_two_winners():
     highest_score = 1
     high_score = {user_a: 1, user_b: 1}
 
-    response = present_winner(best_user, highest_score, high_score)
+    response = present_winner(high_score)
 
     print(response)
     assert (

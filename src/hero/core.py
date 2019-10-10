@@ -24,8 +24,7 @@ def start(args):
 
 def stop(args):
     high_score = try_to_get_high_score(args["channel_id"])
-    winners, score = _get_winner(high_score)
-    response = present_winner(winners, score, high_score)
+    response = present_winner(high_score)
     try_to_stop_game(args["channel_id"])
     return response
 
@@ -42,7 +41,8 @@ def present_high_score(high_score):
     return high_score_dict
 
 
-def present_winner(best_users, highest_score, high_score):
+def present_winner(high_score):
+    best_users, highest_score = _get_winner(high_score)
     if not best_users:
         return "No one won :("
     elif len(best_users) > 1:

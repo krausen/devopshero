@@ -14,34 +14,24 @@ LOGGER.addHandler(sh)
 
 
 def claim(args):
-    LOGGER.debug("CLAIM ARGS: \n%s", str(args))
-    response = try_to_claim(args["user_name"], args["channel_id"])
-    LOGGER.debug("CLAIM RESPONSE: \n%s", str(response))
+    return try_to_claim(args["user_name"], args["channel_id"])
 
 
 def start(args):
-    LOGGER.debug("START ARGS: \n%s", str(args))
-    response = try_to_start_game(args["channel_id"])
-    LOGGER.debug("START RESPONSE: \n%s", str(response))
+    return try_to_start_game(args["channel_id"])
     return response
 
 
 def stop(args):
-    LOGGER.debug("STOP ARGS: \n%s", str(args))
     high_score = try_to_get_high_score(args["channel_id"])
-    LOGGER.debug("GET WINNER")
     winners, score = _get_winner(high_score)
-    LOGGER.debug("WINNERS ARE %s WITH SCORE %s", str(winners), str(score))
     response = present_winner(winners, score, high_score)
     try_to_stop_game(args["channel_id"])
-    LOGGER.debug("STOP RESPONSE: \n%s", str(response))
     return response
 
 
 def high_score(args):
-    LOGGER.debug("HIGH_SCORE ARGS: \n%s", str(args))
     high_score = try_to_get_high_score(args["channel_id"])
-    LOGGER.debug("HIGH_SCORE RESPONSE: \n%s", str(high_score))
     return present_high_score(high_score)
 
 

@@ -14,9 +14,9 @@ def test_try_to_start_game(mock_channel_exist, mock_game_is_running, mock_start_
     mock_channel = Channel(channel_id="mock_channel_id", start=datetime.now())
     mock_start_game.return_value = mock_channel
 
-    channel = try_to_start_game("mock_channel_id")
+    started = try_to_start_game("mock_channel_id")
 
-    assert channel == mock_channel
+    assert started
 
 
 @mock.patch("hero.usecases.start_game.start_game")

@@ -27,4 +27,4 @@ def try_to_start_game(channel_id):
     now = datetime.datetime.now()
     channel = start_game(channel_id, now)
     LOGGER.info("Game started in %s at %s", channel_id, now)
-    return channel
+    return not channel.start == None

@@ -18,4 +18,5 @@ def try_to_stop_game(channel_id):
         LOGGER.warning("No game is running")
         raise Exception("No game started in channel")
     LOGGER.debug("Stop game %s", channel_id)
-    stop_game(channel_id)
+    channel = stop_game(channel_id)
+    return channel == None

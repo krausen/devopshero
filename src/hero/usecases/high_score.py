@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 
+from hero.entities.high_score import HighScore
 from hero.adapters.data_gateway import (
     get_user,
     get_channel,
@@ -25,36 +26,10 @@ def try_to_get_high_score(channel_id):
         raise Exception("No game is running")
     claims = get_claims_after_start(channel_id)
     LOGGER.debug("Compute high_score from claims:\n%s", claims)
-    high_score = {}
+    high_score = HighScore()
     for claim in claims:
-        if claim.user in high_score.keys():
-            high_score[claim.user] = high_score[claim.user] + 1
-        else:
-            high_score[claim.user] = 1
-    high_score = _sort_high_score(high_score)
+        high_score.add(claim.user)
+    high_score.sort()
 
     LOGGER.debug("Computed high_score: \n %s", high_score)
     return high_score
-
-
-def _sort_high_score(high_score):
-    winner_to_loser = sorted(
-        high_score.keys(), key=lambda user: high_score[user], reverse=True
-    )
-    sorted_high_score = {}
-    for user in winner_to_loser:
-        sorted_high_score[user] = high_score[user]
-    return sorted_high_score
-
-
-def _get_winner(high_score):
-    highest_score = 0
-    best_users = []
-
-    for user, score in high_score.items():
-        if score > highest_score:
-            highest_score = score
-            best_users = [user]
-        elif score == highest_score:
-            best_users.append(user)
-    return best_users, highest_score

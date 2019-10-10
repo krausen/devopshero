@@ -5,7 +5,7 @@ import sys
 from hero.usecases.start_game import try_to_start_game
 from hero.usecases.stop_game import try_to_stop_game
 from hero.usecases.claim import try_to_claim
-from hero.usecases.high_score import try_to_get_high_score, _get_winner
+from hero.usecases.high_score import try_to_get_high_score
 
 LOGGER = logging.getLogger(__name__)
 sh = logging.StreamHandler(stream=sys.stdout)
@@ -42,7 +42,7 @@ def present_high_score(high_score):
 
 
 def present_winner(high_score):
-    best_users, highest_score = _get_winner(high_score)
+    best_users, highest_score = high_score.get_winners()
     if not best_users:
         return "No one won :("
     elif len(best_users) > 1:

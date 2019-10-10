@@ -1,11 +1,8 @@
 from unittest import mock, TestCase
 
 from hero.entities.user import User
-from hero.usecases.high_score import (
-    _get_winner,
-    _sort_high_score,
-    try_to_get_high_score,
-)
+from hero.entities.high_score import HighScore
+from hero.usecases.high_score import try_to_get_high_score
 
 
 @mock.patch("hero.usecases.high_score.get_claims_after_start")
@@ -28,7 +25,7 @@ def test_try_to_get_high_score(
 
     high_score = try_to_get_high_score("mock_channel_id")
     assert len(high_score) == 2
-    assert high_score == {user_a: 2, user_b: 1}
+    assert high_score.score_board == {user_a: 2, user_b: 1}
 
 
 @mock.patch("hero.usecases.high_score.get_channel")
@@ -64,11 +61,16 @@ def test_try_to_get_high_score_game_is_started(
 
 
 def test_sort_high_score():
-    high_score = {"user_a": 3, "user_b": 4}
+    user_a = User("user_a")
+    user_b = User("user_b")
+    high_score = HighScore()
+    high_score.add(user_a)
+    high_score.add(user_b)
+    high_score.add(user_a)
 
-    sorted_high_score = _sort_high_score(high_score)
+    high_score.sort()
 
-    assert high_score == {"user_b": 4, "user_a": 3}
+    assert high_score.score_board == {user_a: 2, user_b: 1}
 
 
 @mock.patch("hero.usecases.high_score.get_user")
@@ -76,12 +78,15 @@ def test_get_winner(mock_get_user):
     user_a = User("user_a")
     user_b = User("user_b")
     mock_get_user.side_effect = [user_a, user_b]
-    high_score = {user_a: 4, user_b: 3}
+    high_score = HighScore()
+    high_score.add(user_a)
+    high_score.add(user_b)
+    high_score.add(user_b)
 
-    winner, score = _get_winner(high_score)
+    winner, score = high_score.get_winners()
 
-    assert winner == [user_a]
-    assert score == 4
+    assert winner == [user_b]
+    assert score == 2
 
 
 @mock.patch("hero.usecases.high_score.get_user")
@@ -89,21 +94,23 @@ def test_get_winner_draw(mock_get_user):
     user_a = User("user_a")
     user_b = User("user_b")
     mock_get_user.side_effect = [user_a, user_b]
-    high_score = {user_a: 4, user_b: 4}
+    high_score = HighScore()
+    high_score.add(user_a)
+    high_score.add(user_b)
 
-    winners, score = _get_winner(high_score)
+    winners, score = high_score.get_winners()
 
     assert user_a in winners
     assert user_b in winners
     assert len(winners) == 2
-    assert score == 4
+    assert score == 1
 
 
 @mock.patch("hero.usecases.high_score.get_user")
 def test_get_winner_no_winner(_):
-    high_score = {}
+    high_score = HighScore()
 
-    winners, score = _get_winner(high_score)
+    winners, score = high_score.get_winners()
 
     assert score == 0
     assert winners == []

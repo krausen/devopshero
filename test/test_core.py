@@ -1,6 +1,7 @@
 import unittest.mock as mock
 
 from hero.entities.user import User
+from hero.entities.high_score import HighScore
 from hero.core import start, stop, claim, high_score, present_winner, present_high_score
 
 
@@ -22,13 +23,18 @@ def test_start(try_to_start_game):
     try_to_start_game.assert_called_once_with("mock_channel_id")
 
 
-@mock.patch("hero.core._get_winner")
+@mock.patch("hero.entities.high_score.HighScore")
 @mock.patch("hero.core.try_to_get_high_score")
 @mock.patch("hero.core.try_to_stop_game")
-def test_stop(mock_try_to_stop_game, mock_try_to_get_high_score, mock_get_winner):
+def test_stop(mock_try_to_stop_game, mock_try_to_get_high_score, mock_high_score):
     mock_request = {"text": "stop", "channel_id": "mock_channel_id"}
-    mock_try_to_get_high_score.return_value = {"user_a": 3, "user_b": 1}
-    mock_get_winner.return_value = [User("user_a")], 3
+    user_a = User("user_a")
+    user_b = User("user_b")
+    high_score = HighScore()
+    high_score.add(user_a)
+    high_score.add(user_b)
+    mock_try_to_get_high_score.return_value = high_score
+    mock_high_score.return_value.get_winners.return_value = [User("user_a")], 3
 
     response = stop(mock_request)
 
@@ -49,10 +55,7 @@ def test_claim(try_to_claim):
 
 
 def test_present_winner_no_winner():
-    best_user = []
-    highest_score = 0
-
-    response = present_winner({})
+    response = present_winner(HighScore())
 
     assert response == "No one won :("
 
@@ -60,13 +63,12 @@ def test_present_winner_no_winner():
 def test_present_winner_two_winners():
     user_a = User("user_a")
     user_b = User("user_b")
-    best_user = [user_a, user_b]
-    highest_score = 1
-    high_score = {user_a: 1, user_b: 1}
+    high_score = HighScore()
+    high_score.add(user_a)
+    high_score.add(user_b)
 
     response = present_winner(high_score)
 
-    print(response)
     assert (
         response
         == "The winners with 1 points are:\nuser_a\nuser_b\n{user_a: 1, user_b: 1}"

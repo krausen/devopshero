@@ -8,9 +8,6 @@ from hero.usecases.claim import try_to_claim
 from hero.usecases.high_score import try_to_get_high_score
 
 LOGGER = logging.getLogger(__name__)
-sh = logging.StreamHandler(stream=sys.stdout)
-LOGGER.setLevel(os.environ.get("LOGLEVEL", "INFO"))
-LOGGER.addHandler(sh)
 
 
 def claim(args):
@@ -19,7 +16,6 @@ def claim(args):
 
 def start(args):
     return try_to_start_game(args["channel_id"])
-    return response
 
 
 def stop(args):

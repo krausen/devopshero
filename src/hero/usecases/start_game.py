@@ -6,13 +6,11 @@ from hero.adapters.data_gateway import (
     create_channel,
     channel_exist,
     game_is_running,
+    get_channel,
     start_game,
 )
 
 LOGGER = logging.getLogger(__name__)
-sh = logging.StreamHandler(stream=sys.stdout)
-LOGGER.setLevel(os.environ.get("LOGLEVEL", "INFO"))
-LOGGER.addHandler(sh)
 
 
 def try_to_start_game(channel_id):
@@ -20,11 +18,11 @@ def try_to_start_game(channel_id):
     if not channel_exist(channel_id):
         create_channel(channel_id)
         LOGGER.info("Channel created with id: %s", channel_id)
-    if game_is_running(channel_id):
-        LOGGER.warning("Game has already started in %s", channel_id)
-        raise Exception("Game has already started")
+    elif game_is_running(channel_id):
+        LOGGER.info("Game was already started")
+        return get_channel(channel_id)
     LOGGER.info("Starting game in %s", channel_id)
     now = datetime.datetime.now()
     channel = start_game(channel_id, now)
     LOGGER.info("Game started in %s at %s", channel_id, now)
-    return not channel.start == None
+    return channel

@@ -37,19 +37,21 @@ def test_try_to_start_game_channel_does_not_exist(
     mock_start_game.assert_called_once()
 
 
+@mock.patch("hero.usecases.start_game.get_channel")
 @mock.patch("hero.usecases.start_game.start_game")
 @mock.patch("hero.usecases.start_game.game_is_running")
 @mock.patch("hero.usecases.start_game.create_channel")
 @mock.patch("hero.usecases.start_game.channel_exist")
 def test_try_to_start_game_already_started(
-    mock_channel_exist, mock_create_channel, mock_game_is_running, mock_start_game
+    mock_channel_exist,
+    mock_create_channel,
+    mock_game_is_running,
+    mock_start_game,
+    mock_get_channel,
 ):
     mock_channel_exist.return_value = True
     mock_game_is_running.return_value = True
     mock_channel = Channel(channel_id="mock_channel_id", start=datetime.now())
-    mock_start_game.return_value = mock_channel
+    mock_get_channel.return_value = mock_channel
 
-    try:
-        try_to_start_game("mock_channel_id")
-    except Exception as e:
-        assert str(e) == "Game has already started"
+    assert mock_channel == try_to_start_game("mock_channel_id")

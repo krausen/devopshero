@@ -11,9 +11,6 @@ from hero.adapters.data_gateway import (
 )
 
 LOGGER = logging.getLogger(__name__)
-sh = logging.StreamHandler(stream=sys.stdout)
-LOGGER.setLevel(os.environ.get("LOGLEVEL", "INFO"))
-LOGGER.addHandler(sh)
 
 
 def try_to_claim(user_name, channel_id):

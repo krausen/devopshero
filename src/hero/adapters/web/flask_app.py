@@ -9,10 +9,6 @@ from hero.adapters.slack.verify_request import verify_request
 
 
 LOGGER = logging.getLogger(__name__)
-sh = logging.StreamHandler(stream=sys.stdout)
-LOGGER.setLevel(os.environ.get("LOGLEVEL", "INFO"))
-LOGGER.addHandler(sh)
-
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -45,8 +41,8 @@ def main(request):
         elif method == "high_score":
             return high_score(request.form)
         else:
-            LOGGER.warning("Invalid method: %s", str(request))
-            return "You tried to use an invalid method {0}".format(method)
+            LOGGER.error("Invalid method: %s", str(request))
+            raise ValueError(f"You tried to use an invalid method: {method}")
     except Exception as e:
-        LOGGER.debug(str(e))
+        LOGGER.error(str(e))
         raise e
